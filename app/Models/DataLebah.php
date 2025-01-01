@@ -10,5 +10,10 @@ class DataLebah extends Model
     use HasFactory;
 
     protected $guarded = [];
+
+    public function panen()
+    {
+        return $this->hasMany(Panen::class, 'data_lebah_id', 'id');
+    }
     
 }

@@ -10,4 +10,9 @@ class Panen extends Model
     use HasFactory;
 
     protected $guarded = [];
+    
+    public function dataLebah()
+    {
+        return $this->belongsTo(DataLebah::class, 'data_lebah_id', 'data_lebah_id');
+    }
 }

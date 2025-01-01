@@ -11,15 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('data_lebahs', function (Blueprint $table) {
+        if (!Schema::hasTable('panens')) { // Tambahkan pengecekan tabel
+        Schema::create('panens', function (Blueprint $table) {
             $table->id();
-            $table->string('jenis_lebah');
-            $table->date('tanggal_pengadaan');
-            $table->json('catatan_panen')->nullable();
-            $table->json('catatan_kesehatan')->nullable();
-            $table->string('gambar')->nullable();
+            $table->foreignId('data_lebah_id')->constrained('data_lebahs')->onDelete('cascade');
+            $table->date('tanggal_panen');
+            $table->integer('jumlah_madu');
             $table->timestamps();
         });
+    }
     }
 
     /**

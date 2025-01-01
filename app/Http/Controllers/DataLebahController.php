@@ -33,18 +33,18 @@ class DataLebahController extends Controller
         ]);
 
         $data = new DataLebah();
-        $data->jenis_lebah = $request->jenis_lebah;
-        $data->tanggal_pengadaan = $request->tanggal_pengadaan;
+        $data->jenis_lebah = $validated['jenis_lebah'];
+        $data->tanggal_pengadaan = $validated['tanggal_pengadaan'];
 
-        $data->catatan_kesehatan = json_encode([
-            'kondisiLebah' => $request->kondisiLebah,
-            'kondisiCuaca' => $request->kondisiCuaca,
-        ]);
+        $data->catatan_kesehatan = json_encode(array_filter([
+            'kondisiLebah' => $validated['kondisiLebah'] ?? null,
+            'kondisiCuaca' => $validated['kondisiCuaca'] ?? null,
+        ]));
 
-        $data->catatan_panen = json_encode([
-            'catatanPanen' => $request->catatanPanen,
-            'hargaJual' => $request->hargaJual,
-        ]);
+        $data->catatan_panen = json_encode(array_filter([
+            'catatanPanen' => $validated['catatanPanen'] ?? null,
+            'hargaJual' => $validated['hargaJual'] ?? null,
+        ]));
 
         if ($request->hasFile('gambar')) {
             $fileName = time() . '_' . $request->file('gambar')->getClientOriginalName();
@@ -61,6 +61,9 @@ class DataLebahController extends Controller
     public function tampildata($id)
     {
         $data = DataLebah::find($id);
+        if (!$data) {
+            return redirect()->route('datalebah')->with('error', 'Data Tidak Ditemukan');
+        }
         return view('show', compact('data'));
     }
 
@@ -78,18 +81,18 @@ class DataLebahController extends Controller
             'gambar' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
-        $data->jenis_lebah = $request->jenis_lebah;
-        $data->tanggal_pengadaan = $request->tanggal_lengadaan;
+        $data->jenis_lebah = $validated['jenis_lebah'];
+        $data->tanggal_pengadaan = $validated['tanggal_pengadaan'];
 
-        $data->catatan_kesehatan = json_encode([
-            'kondisiLebah' => $request->kondisiLebah,
-            'kondisiCuaca' => $request->kondisiCuaca,
-        ]);
+        $data->catatan_kesehatan = json_encode(array_filter([
+            'kondisiLebah' => $validated['kondisiLebah'] ?? null,
+            'kondisiCuaca' => $validated['kondisiCuaca'] ?? null,
+        ]));
 
-        $data->catatan_panen = json_encode([
-            'catatanPanen' => $request->catatanPanen,
-            'hargaJual' => $request->hargaJual,
-        ]);
+        $data->catatan_panen = json_encode(array_filter([
+            'catatanPanen' => $validated['catatanPanen'] ?? null,
+            'hargaJual' => $validated['hargaJual'] ?? null,
+        ]));
 
         if ($request->hasFile('gambar')) {
             if ($data->gambar && Storage::exists('public/gambar/' . $data->gambar)) {
@@ -111,6 +114,10 @@ class DataLebahController extends Controller
     {
         $data = DataLebah::find($id);
 
+        if (!$data) {
+            return redirect()->route('datalebah')->with('error', 'Data Tidak Ditemukan');
+        }
+
         // Hapus gambar jika ada
         if ($data->gambar && Storage::exists('public/gambar/' . $data->gambar)) {
             Storage::delete('public/gambar/' . $data->gambar);
@@ -124,6 +131,9 @@ class DataLebahController extends Controller
     public function read($id)
     {
         $data = DataLebah::find($id);
+        if (!$data) {
+            return redirect()->route('datalebah')->with('error', 'Data Tidak Ditemukan');
+        }
         return view('tampilkan', compact('data'));
     }
 }
